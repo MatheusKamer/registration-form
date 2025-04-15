@@ -133,17 +133,14 @@ export default function SubscriberForm() {
               )}
             />
             <Controller
-              name="address_number"
+              name="city"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <div>
-                  <label
-                    htmlFor="address_number"
-                    className="text-sm font-semibold"
-                  >
+                  <label htmlFor="Cidade" className="text-sm font-semibold">
                     Número
                   </label>
-                  <Input {...field} type="number" />
+                  <Input {...field} />
                   {error && <p style={{ color: 'red' }}>{error.message}</p>}
                 </div>
               )}
