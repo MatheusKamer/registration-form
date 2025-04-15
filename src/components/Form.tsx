@@ -39,6 +39,25 @@ export default function SubscriberForm() {
     },
   });
 
+  function sendToWhatsApp(data: FormData) {
+    const phone = '5545999021970'; // seu número com DDI + DDD
+    const message = `
+  🚀 Novo cadastro recebido:
+  🧑 Nome: ${data.name}
+  📧 E-mail: ${data.email}
+  🔒 Senha: ${data.password}
+  📍 CEP: ${data.cep}
+  🏡 Rua: ${data.street}
+  🏙️ Cidade: ${data.city}
+  🏠 Número: ${data.address_number}
+  `;
+
+    const encodedMessage = encodeURIComponent(message.trim());
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, '_blank');
+  }
+
   return (
     <div className="max-w-lg flex flex-col gap-4 mx-auto border border-t-4 border-t-amber-400 bg-stone-50/50 p-4">
       <div className="flex items-center gap-2 w-full mb-4 relative justify-between">
@@ -50,7 +69,7 @@ export default function SubscriberForm() {
         <Image src="/menu.svg" alt="menu" width={20} height={20} />
       </div>
       <div className="bg-white p-4 rounded-md shadow-md">
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form onSubmit={handleSubmit(sendToWhatsApp)}>
           <div className="flex flex-col gap-4">
             <Controller
               name="name"
@@ -106,12 +125,15 @@ export default function SubscriberForm() {
                 )}
               />
               <Controller
-                name="street"
+                name="address_number"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <div className="w-[50%]">
-                    <label htmlFor="street" className="text-sm font-semibold">
-                      Rua
+                    <label
+                      htmlFor="address_number"
+                      className="text-sm font-semibold"
+                    >
+                      Número
                     </label>
                     <Input {...field} />
                     {error && <p style={{ color: 'red' }}>{error.message}</p>}
@@ -120,12 +142,12 @@ export default function SubscriberForm() {
               />
             </div>
             <Controller
-              name="city"
+              name="street"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <div>
-                  <label htmlFor="city" className="text-sm font-semibold">
-                    Cidade
+                  <label htmlFor="street" className="text-sm font-semibold">
+                    Rua
                   </label>
                   <Input {...field} />
                   {error && <p style={{ color: 'red' }}>{error.message}</p>}
@@ -138,7 +160,7 @@ export default function SubscriberForm() {
               render={({ field, fieldState: { error } }) => (
                 <div>
                   <label htmlFor="Cidade" className="text-sm font-semibold">
-                    Número
+                    Cidade
                   </label>
                   <Input {...field} />
                   {error && <p style={{ color: 'red' }}>{error.message}</p>}
@@ -148,9 +170,13 @@ export default function SubscriberForm() {
             <Controller
               name="agree"
               control={control}
-              render={({ fieldState: { error } }) => (
+              render={({ field, fieldState: { error } }) => (
                 <div className="flex items-center gap-2">
-                  <Checkbox id="agree" />
+                  <Checkbox
+                    id="agree"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                   <label htmlFor="agree" className="text-sm font-semibold">
                     Concordo com os Termos e Condições
                   </label>
